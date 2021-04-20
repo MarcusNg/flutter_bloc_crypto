@@ -31,8 +31,10 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
 
   Stream<CryptoState> _getCoins({int page = 0}) async* {
     try {
-      final coins =
-          state.coins + await _cryptoRepository.getTopCoins(page: page);
+      final coins = [
+        if (page != 0) ...state.coins,
+        ...await _cryptoRepository.getTopCoins(page: page),
+      ];
       yield state.copyWith(coins: coins, status: CryptoStatus.loaded);
     } on Failure catch (err) {
       yield state.copyWith(

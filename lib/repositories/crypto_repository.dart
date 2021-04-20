@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_crypto/models/coin_model.dart';
+import 'package:flutter_bloc_crypto/models/failure_model.dart';
 import 'package:http/http.dart' as http;
 
 class CryptoRepository {
@@ -11,13 +13,20 @@ class CryptoRepository {
   CryptoRepository({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  getTopCoins() async {
+  Future<List<Coin>> getTopCoins() async {
     final requestUrl =
         '${_baseUrl}data/top/totalvolfull?limit=$perPage&tsym=USD';
-    final response = await _httpClient.get(Uri.parse(requestUrl));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      final coinList = data['Data'];
+    try {
+      final response = await _httpClient.get(Uri.parse(requestUrl));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        final coinList = List.from(data['Data']);
+        return coinList.map((e) => Coin.fromMap(e)).toList();
+      }
+      return [];
+    } catch (err) {
+      print(err);
+      throw Failure(message: err.toString());
     }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_crypto/blocs/crypto/crypto_bloc.dart';
 import 'package:flutter_bloc_crypto/models/coin_model.dart';
 import 'package:flutter_bloc_crypto/repositories/crypto_repository.dart';
 
@@ -25,51 +27,64 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        child: FutureBuilder(
-          future: CryptoRepository().getTopCoins(),
-          builder: (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
-            if (!snapshot.hasData)
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(Theme.of(context).accentColor),
-                ),
-              );
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                final coin = snapshot.data![index];
-                return ListTile(
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${++index}',
+        child: BlocBuilder<CryptoBloc, CryptoState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case CryptoStatus.loaded:
+                return ListView.builder(
+                  itemCount: state.coins.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final coin = state.coins[index];
+                    return ListTile(
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${++index}',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      title: Text(
+                        coin.fullName,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        coin.name,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: Text(
+                        '\$${coin.price.toStringAsFixed(4)}',
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
-                  ),
-                  title: Text(
-                    coin.fullName,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  subtitle: Text(
-                    coin.name,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  trailing: Text(
-                    '\$${coin.price.toStringAsFixed(4)}',
+                    );
+                  },
+                );
+              case CryptoStatus.error:
+                return Center(
+                  child: Text(
+                    state.failure.message,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18.0,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 );
-              },
-            );
+              default:
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation(Theme.of(context).accentColor),
+                  ),
+                );
+            }
           },
         ),
       ),

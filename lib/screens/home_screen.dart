@@ -31,40 +31,46 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             switch (state.status) {
               case CryptoStatus.loaded:
-                return ListView.builder(
-                  itemCount: state.coins.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final coin = state.coins[index];
-                    return ListTile(
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${++index}',
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      title: Text(
-                        coin.fullName,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        coin.name,
-                        style: const TextStyle(color: Colors.white70),
-                      ),
-                      trailing: Text(
-                        '\$${coin.price.toStringAsFixed(4)}',
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    );
+                return RefreshIndicator(
+                  color: Theme.of(context).accentColor,
+                  onRefresh: () async {
+                    context.read<CryptoBloc>().add(RefreshCoins());
                   },
+                  child: ListView.builder(
+                    itemCount: state.coins.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final coin = state.coins[index];
+                      return ListTile(
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${++index}',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: Text(
+                          coin.fullName,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          coin.name,
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        trailing: Text(
+                          '\$${coin.price.toStringAsFixed(4)}',
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 );
               case CryptoStatus.error:
                 return Center(

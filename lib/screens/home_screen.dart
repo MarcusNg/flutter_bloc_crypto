@@ -23,6 +23,40 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        child: ListView.builder(
+          itemCount: 20,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${++index}',
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              title: Text(
+                'Bitcoin',
+                style: const TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                'BTC',
+                style: const TextStyle(color: Colors.white70),
+              ),
+              trailing: Text(
+                '\$50000.0000',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

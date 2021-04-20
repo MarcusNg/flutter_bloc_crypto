@@ -13,9 +13,9 @@ class CryptoRepository {
   CryptoRepository({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  Future<List<Coin>> getTopCoins() async {
+  Future<List<Coin>> getTopCoins({required int page}) async {
     final requestUrl =
-        '${_baseUrl}data/top/totalvolfull?limit=$perPage&tsym=USD';
+        '${_baseUrl}data/top/totalvolfull?limit=$perPage&tsym=USD&page=$page';
     try {
       final response = await _httpClient.get(Uri.parse(requestUrl));
       if (response.statusCode == 200) {

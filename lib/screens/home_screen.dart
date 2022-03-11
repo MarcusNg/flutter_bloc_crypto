@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             switch (state.status) {
               case CryptoStatus.loaded:
                 return RefreshIndicator(
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   onRefresh: () async {
                     context.read<CryptoBloc>().add(RefreshCoins());
                   },
@@ -63,7 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 '${++index}',
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -80,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           trailing: Text(
                             '\$${coin.price.toStringAsFixed(4)}',
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     state.failure.message,
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 18.0,
                     ),
                     textAlign: TextAlign.center,
@@ -103,8 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
               default:
                 return Center(
                   child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation(Theme.of(context).accentColor),
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 );
             }

@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.black,
-          accentColor: Colors.tealAccent,
+          colorScheme:
+              ColorScheme.dark().copyWith(secondary: Colors.tealAccent),
         ),
         home: BlocProvider(
           create: (context) => CryptoBloc(
